@@ -1,0 +1,30 @@
+avr-gcc -g -Os -mmcu=at90pwm316 -c led.c
+avr-gcc -g -mmcu=at90pwm316 -o led.elf led.o
+avr-objcopy -j .text -j .data -O ihex led.elf led.hex
+
+avr-objcopy -O ihex -R .eeprom  AVRIsp.elf AVRIsp.hex
+avr-objdump -h -S AVRIsp.elf > AVRIsp.lss
+avrdude -p pwm316 -c stk500v2  -U flash:w:led.hex
+
+avrdude -p pwm316 -c stk500v2 -U lfuse:r:con:r -U hfuse:r:con:r -U efuse:r:con:r
+read fuse
+
+avrdude -p pwm316 -c stk500v2 -U lfuse:w:0x4f:m -U hfuse:w:0xdf:m -U efuse:w:0xe9:m
+write fuse
+
+david22:~# avr-gcc -g -Os -mmcu=at90pwm316 -c pwmka.c 
+david22:~# avr-gcc -g -mmcu=at90pwm316 -o pwmka.elf pwmka.o
+david22:~# avr-objcopy -j .text -j .data -O ihex pwmka.elf pwmka.hex
+david22:~# avrdude -p pwm316 -c stk500v2  -U flash:w:pwmka.hex
+
+david22:~# avrdude -p pwm316 -c stk500v2  -U pwmka.elf
+
+avrdude -p pwm316 -c stk500v2 -U lfuse:w:0xce:m -U hfuse:w:0xdf:m -U efuse:w:0xf9:m
+
+bez delicky CKDIV8
+
+avrdude -p pwm316 -c stk500v2 -U lfuse:w:0xdf:m -U hfuse:w:0xdf:m -U efuse:w:0xf9:m
+
+s delickou CKDIV8
+
+avrdude -p pwm316 -c stk500v2 -U lfuse:w:0x5f:m -U hfuse:w:0xdf:m -U efuse:w:0xf9:m
