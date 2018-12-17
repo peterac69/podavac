@@ -149,13 +149,13 @@ DDRD=0xFF;
 //Set PORTC pin as output
 DDRC=0xFF;
 // initial OCR1A value OCR1A = 0x0137; gives 400 hz, 0x80 default
-OCR1A=0x80;
+OCR1A=0xA0;
 // initial OCR1B value OCR1B = 0x0137; gives 400 hz, 0x80 default
-OCR1B=0x80;
+OCR1B=0xA0;
 //Output compare OC1A 10 0xA3, 8 0xA1 bit non inverted PWM
-TCCR1A=0xA1;
+TCCR1A=0xA3;
 //start timer without prescaler, 0x01 start, 0x19 fast pwm on OCR1A
-TCCR1B=0x01;
+TCCR1B=0x19;
 //enable output compare interrupt for OCR1A (TIMSKI=0x02)
 TIMSK1=0x02;
 // OCIE1A = 1
