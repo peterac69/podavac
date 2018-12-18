@@ -2,7 +2,7 @@
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 
-const uint16_t sinewave[] PROGMEM= //1024 values
+const uint16_t sinewave[] PROGMEM= //256 values
 {
 0x8000,0x80c9,0x8192,0x825b,0x8324,0x83ee,0x84b7,0x8580,
 0x8649,0x8712,0x87db,0x88a4,0x896c,0x8a35,0x8afe,0x8bc6,
@@ -136,7 +136,7 @@ const uint16_t sinewave[] PROGMEM= //1024 values
 uint16_t i=0;
 ISR(TIMER1_COMPA_vect){
 OCR1A=pgm_read_byte(&sinewave[i]);
-OCR1B=0xffff-OCR1A;
+//OCR1B=0xffff-OCR1A;
 i++;
 }
 int main(void) {
@@ -148,14 +148,14 @@ PORTB=0xFF;
 DDRD=0xFF;
 //Set PORTC pin as output
 DDRC=0xFF;
-// initial OCR1A value OCR1A = 0x0137; gives 400 hz, 0x80 default
-OCR1A=0xA0;
-// initial OCR1B value OCR1B = 0x0137; gives 400 hz, 0x80 default
-OCR1B=0xA0;
-//Output compare OC1A 10 0xA3, 8 0xA1 bit non inverted PWM
-TCCR1A=0xA3;
-//start timer without prescaler, 0x01 start, 0x19 fast pwm on OCR1A
-TCCR1B=0x19;
+//timer in WGM12 WGM13 CTC mode
+TCCR1B=0b00011000;
+//Output compare OC1A and invert OC1B, COMA1=0 COMA0=1 COMB1=0 COMB0=1 VGM1=0 VGM0=0
+TCCR1A=0b01010000;
+//start timer without prescaler,
+TCCR1B=0b00000001;
+// initial OCR1A value 
+OCR1A=0x8000;
 //enable output compare interrupt for OCR1A (TIMSKI=0x02)
 TIMSK1=0x02;
 // OCIE1A = 1
